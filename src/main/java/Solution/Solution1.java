@@ -315,5 +315,54 @@ public class Solution1 {
 		}
 		return mask & (~num);
     }
+	
+	/**
+	 * https://leetcode.com/problems/shortest-distance-to-a-character/
+	 * 
+	 * Input: S = "loveleetcode", C = 'e'
+	 * Output: [3, 2, 1, 0, 1, 0, 0, 1, 2, 2, 1, 0]
+	 */
+	public int[] shortestToChar(String S, char C) {
+		char [] s = S.toCharArray();
+		int [] rt = new int [s.length];
+		// for any char there are 2 distances, 1. in head of it and one after
+		int before = -1;
+		int after = -1;
+		for (int i = 0; i < s.length; i ++) {
+			if (s[i] == C) {
+				if (before == -1) {
+					// ---------C
+					before = i;
+					for (int j = 0; j < i; j ++) {
+						rt[j] = i - j;
+					}
+				}
+				else {
+					// ---------C-----C
+					// ---------C-----C---C
+					if (after != -1) {
+						before = after;
+					}
+					after = i;
+					for (int j = before + 1; j < i; j ++) {
+						if (j - before < i - j) {
+							rt[j] = j - before;
+						}
+						else {
+							rt[j] = i - j;
+						}
+					}
+				}
+			}
+		}
+		if (after + 1 < s.length) {
+			if (after != -1) {
+				before = after;
+			}
+			for (int j = before + 1; j < s.length; j ++) {
+				rt[j] = j - before;
+			}	
+		}
+		return rt;
+    }
 }
- 

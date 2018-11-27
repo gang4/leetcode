@@ -157,4 +157,24 @@ public class TestSolution1 {
 	public void test_findComplement() {
 		System.out.println(new Solution1().findComplement(5));
 	}
+	
+	
+	@Test
+	public void test_shortestToChar() {
+		String S = new String("loveleetcode");
+		int [] rt = new Solution1().shortestToChar(S, 'e');
+		printAray(rt);
+		
+		S = "aaba";
+		rt = new Solution1().shortestToChar(S, 'b');
+		printAray(rt);
+	}
+
+	private void printAray(int[] rt) {
+		for (int i = 0; i < rt.length; i ++) {
+			System.out.print(rt[i]);
+			System.out.print(",");
+		}
+		System.out.println("");
+	}
 }
