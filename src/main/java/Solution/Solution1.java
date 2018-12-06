@@ -2,9 +2,13 @@ package Solution;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Stack;
 
 public class Solution1 {
 	public List<Integer> selfDividingNumbers(int left, int right) {
@@ -364,5 +368,368 @@ public class Solution1 {
 			}	
 		}
 		return rt;
+    }
+	
+	/**
+	 * https://leetcode.com/problems/keyboard-row/
+	 * Input: ["Hello", "Alaska", "Dad", "Peace"]
+	 * Output: ["Alaska", "Dad"]
+	 */
+	public String[] findWords(String[] words) {
+		if (words == null) {
+			return null;
+		}
+		char [] r1 = {'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'};
+		char [] r2 = {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'};
+		
+		Arrays.sort(r1);
+		Arrays.sort(r2);
+		
+		List<String> list = new ArrayList<>();
+		for (int i = 0; i < words.length; i ++) {
+			boolean in1 = false;
+			boolean in2 = false;
+			boolean in3 = false;
+			int j = 0;
+			char [] w = words[i].toLowerCase().toCharArray();
+			for (; j < words[i].length(); j ++) {
+				if (Arrays.binarySearch(r1, w[j]) >= 0) {
+					in1 = true;
+				}
+				else if (Arrays.binarySearch(r2, w[j]) >= 0) {
+					in2 = true;
+				}
+				else {
+					in3 = true;
+				}
+				
+				if	((in1 && in2) || (in2 && in3) || (in3 && in1)) {
+					break;
+				}
+			}
+			
+			if	(j == words[i].length()) {
+				list.add(words[i]);
+			}
+		}
+		return list.toArray(new String [list.size()]);
+    }
+	
+	/**
+	 * Definition for a binary tree node.
+	 */
+	public static class TreeNode {
+		int val;
+		TreeNode left;
+		TreeNode right;
+		TreeNode(int x) { val = x; }
+	}
+	
+	/**
+	 * https://leetcode.com/problems/leaf-similar-trees/
+	 * [18,35,22,null,103,43,101,58,null,97]
+	 * [94,102,17,122,null,null,54,58,101,97]
+	 */
+    public boolean leafSimilar(TreeNode root1, TreeNode root2) {
+    	if (root1 == null && root2 == null) {
+    		return true;
+    	}
+    	else if (root1 != null && root2 == null) {
+    		return false;
+    	}
+    	else if (root1 == null && root2 != null) {
+    		return false;
+    	}
+    	List<Integer> s1 = new ArrayList<>();
+    	List<Integer> s2 = new ArrayList<>();
+    	printNode(root1, s1);
+    	printNode(root2, s2);
+    	if (s1.size() != s2.size()) {
+    		return false;
+    	}
+    	for (int i = 0; i < s1.size(); i ++) {
+    		if (s1.get(i) != s2.get(i)) {
+    			return false;
+    		}
+    	}
+    	
+    	return true;
+    }
+
+	private void printNode(TreeNode root, List<Integer> s1) {
+		if (root.left == null && root.right == null) {
+			s1.add(root.val);
+		}
+		
+		if (root.left != null) {
+			printNode(root.left, s1);
+		}
+		
+		if (root.right != null) {
+			printNode(root.right, s1);
+		}
+	}
+	
+	/**
+	 * https://leetcode.com/problems/toeplitz-matrix/
+	 */
+	public boolean isToeplitzMatrix(int[][] matrix) {
+		for (int j = 0; j < matrix[0].length; j ++) {
+			for (int i = j, k = 0; i < matrix[0].length - 1 && k < matrix.length - 1; i ++, k ++) {
+				if (matrix[k][i] != matrix[k + 1][i + 1]) {
+					return false;
+				}
+			}
+		}
+		
+		for (int j = 1; j < matrix.length; j ++) {
+			for (int i = 0, k = j; i < matrix[0].length - 1 && k < matrix.length - 1; i ++, k ++) {
+				if (matrix[k][i] != matrix[k + 1][i + 1]) {
+					return false;
+				}
+			}
+		}
+		return true;
+    }
+	
+	/**
+	 * https://leetcode.com/problems/uncommon-words-from-two-sentences/
+	 */
+	public String[] uncommonFromSentences(String A, String B) {
+		String [] words = A.split(" ");
+		Map<String, Long> table1 = new Hashtable<>();
+		for (int i = 0; i < words.length; i ++) {
+			if (table1.get(words[i]) == null) {
+				table1.put(words[i], 0L);
+			}
+			else {
+				table1.put(words[i], 1L);
+			}
+		}
+		
+		String [] dup = B.split(" ");
+		Map<String, Long> table2 = new Hashtable<>();
+		for (int i = 0; i < dup.length; i ++) {
+			if (table2.get(dup[i]) == null) {
+				table2.put(dup[i], 0L);
+			}
+			else {
+				table2.put(dup[i], 1L);
+			}
+		}
+		
+		List<String> list = new ArrayList<>();
+		for (Entry<String, Long> entry: table1.entrySet()) {
+			if (entry.getValue() == 0L && table2.get(entry.getKey()) == null) {
+				list.add(entry.getKey());
+			}
+		}
+		for (Entry<String, Long> entry: table2.entrySet()) {
+			if (entry.getValue() == 0L && table1.get(entry.getKey()) == null) {
+				list.add(entry.getKey());
+			}
+		}
+		words = new String [list.size()];
+		return list.toArray(words);
+    }	
+	
+	/*
+	 * https://leetcode.com/problems/island-perimeter/
+	 * 
+	 * Not good
+	 */
+	public int islandPerimeter(int[][] grid) {
+		int count = 0;
+        for (int j = 0; j < grid.length; j ++) {
+        	for (int i = 0; i < grid[0].length; i ++) {
+        		if (grid[j][i] == 1) {
+        			// most left
+        			if (i == 0) {
+        				count ++;
+        			}
+        			else if (grid[j][i - 1] == 0) {
+            			count ++;
+            		}
+
+        			// most right
+        			if (i == grid[0].length - 1) {
+        				count ++;
+        			}
+        			// i right
+        			else if (grid[j][i + 1] == 0) {
+        				count ++;
+        			}
+        			
+        			if (j == 0) {
+        				count ++;
+        			}
+        			else if (grid[j - 1][i] == 0) {
+        				count ++;
+        			}
+        			
+        			if (j == grid.length - 1) {
+        				count ++;
+        			}
+        			else if (grid[j + 1][i] == 0) {
+        				count ++;
+        			}
+
+        		}
+        	}
+        }
+		return count;
+    }
+	
+	/**
+	 * https://www.geeksforgeeks.org/print-all-palindrome-permutations-of-a-string/
+	 * 
+	 * Input:  str = "aabcb"
+	 * Output: abcba bacab
+	 *
+	 * input:  str = "aabbcadad"
+	 * Output: aabdcdbaa aadbcbdaa abadcdaba
+     *   abdacadba adabcbada adbacabda
+     *   baadcdaab badacadab bdaacaadb
+     *   daabcbaad dabacabad dbaacaabd
+	 */
+	public int palindromePermutations(String in) {
+		// (1) 	check if in.length is even or odd,
+		// (2) 	get all unique char and number of it.
+		// (3) 	if string length is odd number, then you 
+		// 		have to have only one char that has number 
+		//		of odd number.
+		// (4)  if string length is even, all number of 
+		//		Individual char has to be even
+		// (6)  n! is all combinations -> y
+		// (7)  for all number of chars = x
+		// (8)  	y = (y / (x / 2);
+		//
+		// Print all
+		// tranverse through all chars
+		// (1) put half of chars in an array
+		// Optional
+		// (2) put all result into a hastable to get rid of dup
+		return 0;
+	}
+	
+	/**
+	 * https://leetcode.com/problems/trim-a-binary-search-tree/
+	 */
+	public TreeNode trimBST(TreeNode root, int L, int R) {
+		if (root.left != null) {
+			root.left = trimBST(root.left, L, R);
+		}
+		
+		if (root.right != null) {
+			root.right = trimBST(root.right, L, R);
+		}
+		
+		if (root.val < L || root.val > R) {
+			if (root.left == null) {
+				return root.right;
+			}
+			else {
+				// find place to set right
+				if (root.right != null) {
+					attachNode(root.left, root.right);
+				}
+				return root.left;
+			}
+		}
+		else {
+			return root;
+		}
+    }
+
+	private void attachNode(TreeNode left, TreeNode right) {
+		if (left.left != null && left.right != null) {
+			attachNode(left.left, right);
+		}
+		if (left.left == null) {
+			left.left = right;
+		}
+		else {
+			left.right = right;
+		}
+	}
+	
+	/**
+	 * https://leetcode.com/problems/increasing-order-search-tree/
+	 */
+	TreeNode root = null;
+	TreeNode current = null;
+    public TreeNode increasingBST(TreeNode root) {
+    	if (root == null) {
+    		return null;
+    	}
+    	increasingBSTInternal(root);
+    	return this.root;
+    }
+	private void increasingBSTInternal(TreeNode root) {
+		if (root.left != null) {
+			increasingBSTInternal(root.left);
+		}
+		
+		if (root.right != null) {
+			addNode(root);
+			increasingBSTInternal(root.right);
+		}
+		else {
+			addNode(root);
+		}
+	}
+
+	private void addNode(TreeNode root) {
+		if (this.root == null) {
+			this.root = root;
+			current = root;
+		}
+		else {
+			current.right = root;
+			current.left = null;
+			current = current.right;
+		}
+		root.left = null;
+	}
+	
+	/*
+	 * https://leetcode.com/problems/binary-gap/
+	 */
+	public int binaryGap(int n) {
+		int dist = 0;
+		int curentIdx = 0;
+		//boolean consecutive = false;
+		boolean hasOne = false;
+		for (int i = 0; i < 64 &&  n != 0; i ++) {
+			if (!hasOne) {
+				curentIdx = i;
+			}
+			if ((n & 0x1) == 0x1) {
+				if ((i - curentIdx) > dist) {
+					dist = i - curentIdx;
+				}
+				curentIdx = i;
+				hasOne = true;
+			}
+			n >>= 1;
+		}
+		return dist;
+    }
+	
+	/**
+	 * https://leetcode.com/problems/distribute-candies/
+	 */
+	public int distributeCandies(int[] candies) {
+		Arrays.sort(candies);
+		int count = 1;
+		for (int i = 0; i < candies.length - 1; i ++) {
+			if (candies[i] != candies[i + 1]) {
+				count ++;
+			}
+		}
+		if (count > candies.length / 2 ) {
+			count = candies.length / 2;
+		}
+		return count;
     }
 }

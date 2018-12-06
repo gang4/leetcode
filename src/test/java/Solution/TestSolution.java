@@ -2,8 +2,6 @@ package Solution;
 
 import org.junit.Test;
 
-import Solution.Solution.TreeNode;
-
 public class TestSolution {
 	
 	@Test
