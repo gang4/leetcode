@@ -317,6 +317,7 @@ public class TestSolution1 {
 		new Solution1().increasingBST(root);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void test_binaryGap() {
 		int rt = new Solution1().binaryGap(6);
@@ -332,14 +333,160 @@ public class TestSolution1 {
 		Assert.assertEquals(0, rt);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@Test
 	public void test_distributeCandies() {
-		int [] candise = {1,1,2,2,3,3};
+		int [] candise = new int [] {0,10,0,10,0,10,0,10,0,10};
 		int rt = new Solution1().distributeCandies(candise);
+		Assert.assertEquals(2, rt);
+
+		candise = new int [] {1,1,2,2,3,3};
+		rt = new Solution1().distributeCandies(candise);
 		Assert.assertEquals(3, rt);
 		
 		candise = new int [] {1,1,2,3};
 		rt = new Solution1().distributeCandies(candise);
 		Assert.assertEquals(2, rt);
+	}
+	
+	@Test
+	public void test_fizzBuzz() {
+		List<String> rt = new Solution1().fizzBuzz(15);
+		rt.forEach(s -> {
+			System.out.print(s + " ,");
+		});
+		System.out.println("");
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void test_projectionArea() {
+		int [][] in;
+		int rt;
+		//[[1,1,1],[1,0,1],[1,1,1]]
+		in = new int [][] {{2,2,2},{2,1,2},{2,2,2}};
+		rt = new Solution1().projectionArea(in);
+		Assert.assertEquals(21, rt);
+		
+		in = new int [][] {{1,1,1},{1,0,1},{1,1,1}};
+		rt = new Solution1().projectionArea(in);
+		Assert.assertEquals(14, rt);
+				
+		in = new int [][] {{1,0},{0,2}};
+		rt = new Solution1().projectionArea(in);
+		Assert.assertEquals(8, rt);
+		
+		in = new int[][] {{1,2},{3,4}};
+		rt = new Solution1().projectionArea(in);
+		Assert.assertEquals(17, rt);
+		
+		in = new int [][] {{2}};
+		rt = new Solution1().projectionArea(in);
+		Assert.assertEquals(5, rt);
+	}
+	
+	@SuppressWarnings("deprecation")
+	@Test
+	public void test_maxDepth() {
+		TreeNode root;
+		int depth ;
+		// [0]
+		root = new TreeNode(0);
+		depth = new Solution1().maxDepth(root);
+		Assert.assertEquals(1, depth);
+		System.out.println("-----------------");
+		// [0,2]
+		root = new TreeNode(0);
+		root.left = new TreeNode(2);
+		depth = new Solution1().maxDepth(root);
+		Assert.assertEquals(2, depth);
+		System.out.println("-----------------");
+		// [0,null,2]
+		root = new TreeNode(1);
+		root.right = new TreeNode(3);
+		depth = new Solution1().maxDepth(root);
+		Assert.assertEquals(2, depth);
+		System.out.println("-----------------");
+		//[1,2,3]
+		root = new TreeNode(1);
+		root.left = new TreeNode(2);
+		root.right = new TreeNode(3);
+		depth = new Solution1().maxDepth(root);
+		Assert.assertEquals(2, depth);
+		System.out.println("-----------------");
+		// [0,2,4,1,null,3,-1,5,1,null,6,null,8]
+		/**
+		 *       0
+		 *      / \
+		 *     2   4
+		 *    /   / \
+		 *   1   3  -1 
+		 *  / \   \   \ 
+		 * 5   1   6   8
+		 */
+		root = new TreeNode(0);
+		root.left = new TreeNode(2);
+		root.right = new TreeNode(4);
+		root.left.left = new TreeNode(1);
+		root.right.left = new TreeNode(3);
+		root.right.right = new TreeNode(-1);
+		root.left.left.left = new TreeNode(5);
+		root.left.left.right = new TreeNode(1);
+		root.right.right.right = new TreeNode(5);
+		root.right.left.right = new TreeNode(6);
+		root.right.right.right = new TreeNode(8);
+		depth = new Solution1().maxDepth(root);
+		Assert.assertEquals(4, depth);
+		
+		// [0,0,0,0,null,null,0,null,null,null,0]
+		/**
+		 * 		0
+		 * 	   / \
+		 *    1   2
+		 *   /     \
+		 *  3       4
+		 *           \
+		 *            5
+		 */
+		root = new TreeNode(0);
+		root.left = new TreeNode(1);
+		root.left.left = new TreeNode(3);
+		root.right = new TreeNode(2);
+		root.right.right = new TreeNode(4);
+		root.right.right.right = new TreeNode(5);
+		depth = new Solution1().maxDepth(root);
+		Assert.assertEquals(4, depth);
+		/**
+		    3
+		   / \
+		  9  20
+		    /  \
+		   15   7
+   		 */
+		root = new TreeNode(3);
+		root.left = new TreeNode(9);
+		root.right = new TreeNode(20);
+		root.right.left = new TreeNode(15);
+		root.right.right = new TreeNode(7);
+		
+		depth = new Solution1().maxDepth(root);
+		Assert.assertEquals(3, depth);
+		
+		/**
+	    3
+	     \
+	     20
+	       \
+	        17
+	         \
+	          7
+		 */
+		root = new TreeNode(3);
+		root.right = new TreeNode(20);
+		root.right.right = new TreeNode(17);
+		root.right.right.right = new TreeNode(7);
+		
+		depth = new Solution1().maxDepth(root);
+		Assert.assertEquals(4, depth);
 	}
 }

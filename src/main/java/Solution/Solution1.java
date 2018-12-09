@@ -2,8 +2,6 @@ package Solution;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -719,9 +717,62 @@ public class Solution1 {
 	/**
 	 * https://leetcode.com/problems/distribute-candies/
 	 */
+	public static void buildheap(int []arr) {
+	   /*
+	    * As last non leaf node will be at (arr.length-1)/2 
+	    * so we will start from this location for heapifying the elements
+	    * */
+		for(int i = (arr.length - 1) / 2; i >= 0; i--){
+			heapify(arr, i, arr.length - 1);
+		}
+	}
+ 
+	public static void heapify(int[] arr, int i,int size) { 
+		int left = 2*i + 1;
+		int right = 2*i + 2;
+		int max;
+		if (left <= size && arr[left] > arr[i]) {
+			max = left;
+		} else {
+			max = i;
+		}
+ 
+		if (right <= size && arr[right] > arr[max]) {
+			max = right;
+		}
+		// If max is not current node, exchange it with max of left and right child
+		if (max != i) {
+			exchange(arr, i, max);
+			heapify(arr, max, size);
+       }
+   }
+ 
+   public static void exchange(int[] arr,int i, int j) {
+       int t = arr[i];
+       arr[i] = arr[j];
+       arr[j] = t; 
+   }
+ 
+   public static int heapSort(int[] arr) {
+	   buildheap(arr);
+	   int sizeOfHeap = arr.length - 1;
+	   int count = 1;
+	   for (int i = sizeOfHeap; i > 0; i--) {
+		   exchange(arr,0, i);
+		   if (i != (arr.length - 1) && arr[i + 1] != arr[i]) {
+			   count ++;			   
+		   }
+		   sizeOfHeap = sizeOfHeap - 1;
+
+		   heapify(arr, 0, sizeOfHeap);
+	   }
+	   return count;
+   	}
+   
 	public int distributeCandies(int[] candies) {
 		Arrays.sort(candies);
-		int count = 1;
+		//heapSort(candies);
+		int count = heapSort(candies);
 		for (int i = 0; i < candies.length - 1; i ++) {
 			if (candies[i] != candies[i + 1]) {
 				count ++;
@@ -732,4 +783,159 @@ public class Solution1 {
 		}
 		return count;
     }
+	
+	/**
+	 * https://leetcode.com/problems/fizz-buzz/
+	 * @param n
+	 * @return
+	 */
+    public List<String> fizzBuzz(int n) {
+    	String [] str = {"Fizz", "Buzz", "FizzBuzz"};
+    	List<String> rt = new ArrayList<>();
+    	for (Integer i = 1; i < n + 1; i ++) {
+    		if (i % 3 == 0 && i % 5 == 0) {
+    			rt.add(str[2]);
+    		}
+    		else if (i % 3 == 0) {
+    			rt.add(str[0]);
+    		}
+    		else if (i % 5 == 0) {
+    			rt.add(str[1]);
+    		}
+    		else {
+    			//rt.add(toNumberString(i));
+    			rt.add(i.toString());
+    		}
+    	}
+    	return rt;
+    }
+    
+    /**
+     * https://leetcode.com/problems/projection-area-of-3d-shapes/
+     */
+    public int projectionArea(int[][] grid) {
+    	// top to down projection, count all != 0
+    	int count = 0;
+    	int [] col = new int [grid.length];
+    	int [] row = new int [col.length];
+    	for (int i = 0; i < row.length; i ++) {
+    		for (int j = 0; j < col.length; j ++) {
+    			if (grid[i][j] != 0) {
+    				count ++;
+    			}
+    			
+    			if (grid[i][j] > row[i]) {
+    				row[i] = grid[i][j];
+    			}
+    			
+    			if (grid[i][j] > col[j]) {
+    				col[j] = grid[i][j];
+    			}
+    		}
+    	}
+    	for (int i = 0; i < col.length; i ++) {
+    		count += (row[i] + col[i]);
+    	}
+    	return count;
+    }
+    
+    /**
+     * https://leetcode.com/problems/not-boring-movies/submissions/
+     * 
+     * select id,movie,description,rating from cinema where id % 2 = 1 and description != 'boring' order by rating DESC
+     */
+        
+    /*
+     * https://leetcode.com/problems/swap-salary/submissions/
+     * update salary
+	set sex =
+	  	case sex 
+	    	when 'f' then 'm'
+	    	when 'm' then 'f'
+	  	end;
+     */
+    
+    /**
+     * https://leetcode.com/problems/maximum-depth-of-binary-tree/
+     */
+    private int depth = 0;
+    private int max = 0;
+	public int maxDepth(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		depth ++;
+		System.out.println("val: " + root.val + " ->" + "depth:" + depth);
+		maxDepth(root.left);
+		maxDepth(root.right);
+		if (max < depth) {
+			max = depth;
+		}
+		depth --;
+		return max;
+	}
+
+    public int maxDepth1(TreeNode root) {
+		if (root == null) {
+			return 0;
+		}
+		
+		int max = 0;
+		int depth = 1;
+		int call = -1; // -1 left, 0 none, 1 right
+		boolean stop = false;
+		Stack<TreeNode> stack = new Stack<>();
+		// mimick maxDepth1
+		do {
+			// return if null
+			if (root == null) {
+				root = stack.pop();
+				depth --;
+				if (call == -1) {
+					call = 1;
+				}
+				else if (call == 1){
+					call = 0;
+				}
+				continue; // return
+			}
+			
+			System.out.println("val: " + root.val + " ->" + "depth:" + depth);
+
+			switch (call) {
+			case -1:
+				stack.push(root);
+				depth ++;
+				root = root.left;
+				break;
+			case 1:
+				stack.push(root);
+				depth ++;
+				root = root.right;
+				break;
+			case 0:
+				if (max < depth) {
+					max = depth;
+				}
+				
+				// return
+				if (stack.isEmpty()) {
+					stop = true;
+					break;
+				}
+				TreeNode next = stack.pop();
+				if (next.left == root) {
+					call = 1;
+				}
+				else {
+					call = 0;
+				}
+				root = next;
+				depth --;
+			}
+			
+		} while (!stop);
+		
+		return max;
+	}
 }
