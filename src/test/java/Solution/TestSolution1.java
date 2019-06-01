@@ -9,7 +9,7 @@ import org.junit.Test;
 import Solution.Solution1.ListNode;
 import Solution.Solution1.Node;
 import Solution.Solution1.TreeNode;
-import junit.framework.Assert;
+import org.junit.Assert; 
 
 public class TestSolution1 {
 	@Test
@@ -317,7 +317,6 @@ public class TestSolution1 {
 		new Solution1().increasingBST(root);
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test_binaryGap() {
 		int rt = new Solution1().binaryGap(6);
@@ -333,7 +332,6 @@ public class TestSolution1 {
 		Assert.assertEquals(0, rt);
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test_distributeCandies() {
 		int [] candise = new int [] {0,10,0,10,0,10,0,10,0,10};
@@ -358,7 +356,6 @@ public class TestSolution1 {
 		System.out.println("");
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test_projectionArea() {
 		int [][] in;
@@ -385,7 +382,6 @@ public class TestSolution1 {
 		Assert.assertEquals(5, rt);
 	}
 	
-	@SuppressWarnings("deprecation")
 	@Test
 	public void test_maxDepth() {
 		TreeNode root;
